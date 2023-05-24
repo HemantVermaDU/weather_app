@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Weather App</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <div class="card">
+          <div class="search">
+             <input type="text" name="" placeholder="Enter City name...">
+             <button><img src="images/search.png" alt="search"></button>
+          </div>
+          <div class="error">
+            <p>Invalid City Name...</p>
+          </div>
+         <div class="weather">
+          <div class="locations">
+            <div>
+               <img src="images/location.png" alt="location" width="32" height="32"> 
+            </div>
+            <div> <h2 class="city">agra</h2></div>
+           </div>
+           <div class="datetime">
+           <div class="date"></div>
+           <div class="time"></div>
+           </div>
+           <img src="images/rain.png" class="weather-icon">
+            <h2 class="weather_name"></h2>
+           <h1 class="temp">22</h1>       
+           <div class="details">
+             <div class="col">
+               <img src="images/humidity-2.png">
+               <div>
+             <p>Humidity</p>
+             <p class="humidity"> </p>
+           </div>
+           </div>
+           <div class="col">
+               <img src="images/wind-2.png">
+               <div>
+             <p>Wind Now</p>
+              <p class="wind"> </p>
+           </div>
+           </div>
+            </div>
+         </div>       
+        </div>
+        <footer class="footer"> 
+             <p> Get more amazing projects | <a href="https://hemantvermadu.github.io/" target="_blank"> Hemant Verma</a></p>
+           </footer>
+
+       <script type="text/javascript">
+          const apiKey="c3fd2455797d77f14ecaca0878e94c72";
+         const kelvin = 273;
+         const apiUrl="https://api.openweathermap.org/data/2.5/weather?units=matric&q=";
+
+
+         const searchBox = document.querySelector(".search input");
+         const searchBtn = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon");
+
+         async function checkWeather(city){ 
+          const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+          if (response.status == 404) {
+            document.querySelector(".error").style.display="block";
+             document.querySelector(".weather").style.display="none";
+          }else
+          {
+        var data = await response.json();
+
+
+           console.log(data); 
+
+           document.querySelector(".city").innerHTML= data.name;
+           document.querySelector(".temp").innerHTML= Math.floor(data.main.temp - kelvin) + "°C";
+           document.querySelector(".humidity").innerHTML= data.main.humidity + "%";
+           document.querySelector(".wind").innerHTML= data.wind.speed + " km/h";
+           document.querySelector(".weather_name").innerHTML= data.weather[0].main;
+
+if(data.weather[0].main == "Clouds"){
+      weatherIcon.src = "images/clouds.png";
+}
+else if(data.weather[0].main == "Clear"){
+  weatherIcon.src = "images/clear.png";
+}
+else if(data.weather[0].main == "Drizzle"){
+  weatherIcon.src = "images/drizzle.png";
+}
+else if(data.weather[0].main == "Rain"){
+  weatherIcon.src = "images/rain.png";
+}
+else if(data.weather[0].main == "Mist"){
+  weatherIcon.src = "images/mist.png";
+}
+else if(data.weather[0].main == "Snow"){
+  weatherIcon.src = "images/snow.png";
+}
+else if(data.weather[0].main == "Wind"){
+  weatherIcon.src = "images/wind.png";
+}
+else if(data.weather[0].main == "Humidity"){
+  weatherIcon.src = "images/humidity.png";
+}
+
+document.querySelector(".weather").style.display = "block";
+ document.querySelector(".error").style.display="none";
+ }
+}        
+searchBtn.addEventListener("click" ,()=>{
+  checkWeather(searchBox.value);
+})        
+
+ // date
+const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const dm = new Date();
+const day = weekday[dm.getDay()];
+document.querySelector(".date").innerHTML = day;
+
+  // Time 
+         var now = new Date();
+        var hours = now.getHours();
+            var d = new Date();
+            var n = d.toLocaleString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.querySelector(".time").innerHTML = n;
+       </script>  
+</body>
+</html>
